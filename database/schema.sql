@@ -173,3 +173,25 @@ constraint fk_transaction_request
 	on delete restrict
 );
 
+
+--Indexes for performance optimization
+
+-- Fast blood availability search (SUM query across batches)
+CREATE INDEX idx_blood_stock_group_component
+    ON blood_stock (blood_group, component_type);
+
+-- Fast expiry cleanup (scheduled event scans this)
+CREATE INDEX idx_blood_stock_expiry
+    ON blood_stock (expiry_date);
+
+-- Fast emergency donor search
+CREATE INDEX idx_donor_eligibility_bloodgroup
+    ON donor (eligibility_status, donor_blood_group);
+
+-- Fast admin request queue filtering
+CREATE INDEX idx_blood_request_status_date
+    ON blood_request (status, request_date);
+
+-- Fast audit log time-range queries
+CREATE INDEX idx_stock_transaction_date
+    ON stock_transaction (transaction_date);
