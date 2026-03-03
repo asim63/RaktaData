@@ -248,5 +248,5 @@ INSERT INTO blood_request
     (customer_id, patient_name, blood_group, component_type, quantity, urgency)
 VALUES (2, 'Bikram Rai', 'O-', 'Whole Blood', 2.00, 'EMERGENCY');
 
---checkout
+--not-checkout
 
