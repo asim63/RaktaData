@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Icon from "../../components/Icons";
 import { adminGetRequests, adminApproveRequest, adminRejectRequest } from "../../api";
 
@@ -116,7 +117,10 @@ const AdminRequests = () => {
         </div>
       )}
 
-      {toast && <div className={`toast${toast.type === "success" ? " toast-green" : " toast-red"}`}>{toast.msg}</div>}
+      {toast && createPortal(
+        <div className={`toast${toast.type === "success" ? " toast-green" : " toast-red"}`}>{toast.msg}</div>,
+        document.body
+      )}
     </div>
   );
 };
