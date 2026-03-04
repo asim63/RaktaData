@@ -2,8 +2,8 @@ import Logo from "./Logo";
 import Icon from "./Icons";
 
 const PublicNav = ({ page, setPage, onLogin, dark, onToggleTheme }) => {
-  const publicLinks = ["Home", "About", "Blood Enquiry", "Contact"];
-  const linkMap = { "Blood Enquiry": "BloodEnquiry" };
+  const publicLinks = ["Home", "About", "Contact"];
+  const linkMap = {};
 
   return (
     <nav className="pub-nav">

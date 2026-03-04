@@ -27,10 +27,10 @@ const LoginModal = ({ onClose, onLogin }) => {
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal" style={{ maxWidth: "380px" }}>
-        <div style={{ textAlign: "center", marginBottom: "24px" }}>
+        <div style={{ textAlign: "center", marginBottom: "24px", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
           <Logo />
-          <h2 style={{ fontFamily: "var(--font-head)", fontWeight: 700, fontSize: "1.2rem", marginTop: "14px" }}>Welcome back</h2>
-          <p style={{ fontSize: "0.82rem", color: "var(--text-3)", marginTop: "4px" }}>Sign in to your account</p>
+          <h2 style={{ fontFamily: "var(--font-head)", fontWeight: 700, fontSize: "1.2rem", margin: 0 }}>Welcome back</h2>
+          <p style={{ fontSize: "0.82rem", color: "var(--text-3)", margin: 0 }}>Sign in to your account</p>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           <div className="form-group">

@@ -14,7 +14,6 @@ import HomePage from "./pages/public/HomePage";
 import AboutPage from "./pages/public/AboutPage";
 import ContactPage from "./pages/public/ContactPage";
 import RegisterPage from "./pages/public/RegisterPage";
-import BloodEnquiryPage from "./pages/public/BloodEnquiryPage";
 
 // Staff pages
 import StaffDashboard from "./pages/staff/StaffDashboard";
@@ -152,7 +151,7 @@ export default function App() {
       {page !== "Register" && (
         <PublicNav page={page} setPage={setPage} onLogin={() => setShowLogin(true)} dark={dark} onToggleTheme={toggleTheme} />
       )}
-      <main>{publicPages[page] || <HomePage setPage={setPage} onLogin={() => setShowLogin(true)} />}</main>
+      <main>{publicPages[page] || publicPages["Home"]}</main>
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLogin={handleLogin} />}
     </>
   );
