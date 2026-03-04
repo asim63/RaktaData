@@ -88,7 +88,7 @@ router.post("/request", protect(["CUSTOMER"]), async (req, res) => {
             ? "Insufficient stock — here are eligible donors you can contact directly."
             : "Request submitted successfully! Pending admin approval.",
       data: request,
-      suggestedDonors, // populated only when stock is insufficient
+      emergencyDonors, 
     });
   } catch (err) {
     console.error("Blood request error:", err.message);
