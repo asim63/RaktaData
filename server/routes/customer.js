@@ -205,7 +205,7 @@ router.get("/donors", protect(["CUSTOMER"]), async (req, res) => {
       query += ` AND DATE_PART('year', AGE(CURRENT_DATE, date_of_birth)) <= $${params.length}`;
     }
 
-    query += ` ORDER BY donor_name ASC`;
+    query += ` ORDER BY eligibility_status DESC, donor_name ASC`;
 
     const result = await pool.query(query, params);
 
