@@ -1,50 +1,47 @@
 --1) View to list urgent blood requests along with their fulfillment status based on current blood stock
-create or replace view urgent_fulfillment_list as
-select
-	br.request_id,
-	br.request_date,
-	br.urgency,
-    case br.urgency
-        when 'EMERGENCY' then 'EMERGENCY'
-        else 'NORMAL'
-    end as urgency_label,
-	br.status,
-	br.quantity as requested_quantity,
-	br.blood_group,
-	br.component_type,
+DROP VIEW IF EXISTS urgent_fulfillment_list;
 
-	c.customer_id,
-	c.name as customer_name,
-	c.phone_no as customer_phone,
-	c.email as customer_email,
+CREATE VIEW urgent_fulfillment_list AS
+SELECT
+    br.request_id,
+    br.patient_name,
+    c.name        AS customer_name,
+    c.phone_no    AS customer_phone,
+    c.email       AS customer_email,
+    br.blood_group,
+    br.component_type,
+    br.quantity   AS requested_quantity,
+    br.urgency,
+    br.status,
+    br.rejected_reason,
+    br.request_date,
 
-	coalesce(
-		(select sum(bs.available_units)
-		 from blood_stock bs
-		 where bs.blood_group = br.blood_group
-		 and bs.component_type = br.component_type),
-		 0
-	) as total_available_units,
+    COALESCE((
+        SELECT SUM(bs.available_units)
+        FROM blood_stock bs
+        WHERE bs.blood_group    = br.blood_group
+          AND bs.component_type = br.component_type
+          AND bs.expiry_date   >= CURRENT_DATE
+    ), 0) AS total_available_units,
 
-	case	
-		when coalesce(
-			(select sum(bs.available_units)
-			 from blood_stock bs
-			 where bs.blood_group = br.blood_group
-			 and bs.component_type = br.component_type),
-			 0
-			) >= br.quantity
-			THEN 'Fulfillable'
-			else 'Insufficient Stock'
-	end as fulfillment_status
+    CASE
+        WHEN COALESCE((
+            SELECT SUM(bs.available_units)
+            FROM blood_stock bs
+            WHERE bs.blood_group    = br.blood_group
+              AND bs.component_type = br.component_type
+              AND bs.expiry_date   >= CURRENT_DATE
+        ), 0) >= br.quantity
+        THEN 'Can Fulfill'
+        ELSE 'Insufficient Stock'
+    END AS fulfillment_status
 
-	from blood_request br
-	inner join customer c
-		on br.customer_id = c.customer_id
-	where br.status = 'PENDING'
-	order by 
-		case br.urgency when 'EMERGENCY' then 0 else 1 end,
-		br.request_date asc;
+FROM blood_request br
+JOIN customer c ON c.customer_id = br.customer_id
+WHERE br.status = 'PENDING'
+ORDER BY
+    (br.urgency = 'EMERGENCY') DESC,
+    br.request_date ASC;
 
 
 --2) View emergency_donor_list to quickly identify eligible donors for urgent requests
