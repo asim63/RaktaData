@@ -28,8 +28,7 @@ SELECT
         WHEN COALESCE((
             SELECT SUM(bs.available_units)
             FROM blood_stock bs
-            WHERE bs.blood_group    = br.blood_grou
-            p
+            WHERE bs.blood_group    = br.blood_group
               AND bs.component_type = br.component_type
               AND bs.expiry_date   >= CURRENT_DATE
         ), 0) >= br.quantity

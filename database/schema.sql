@@ -139,7 +139,7 @@ constraint chk_available_units
 create table blood_request (
 request_id serial primary key,
 customer_id int not null,
-patient_name VARCHAR(100) not null;
+patient_name VARCHAR(100) not null,
 blood_group blood_group_type not null,
 component_type component_type not null,
 quantity decimal(5,2) not null, 
