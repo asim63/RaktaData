@@ -153,6 +153,8 @@ router.get("/donors/search", protect(["STAFF"]), async (req, res) => {
 // Protected — Staff only
 // View specific donor details + full donation history
 // Uses donor_donation_history view
+// NOTE: Must be defined AFTER /donors/search to avoid
+// Express matching "search" as a :id parameter
 // ─────────────────────────────────────────────
 router.get("/donors/:id", protect(["STAFF"]), async (req, res) => {
   const { id } = req.params;
@@ -256,18 +258,10 @@ router.post("/donors", protect(["STAFF"]), async (req, res) => {
 
   try {
     // ─── Step 1: Validate donor required fields ───
-    if (
-      !donor_name ||
-      !date_of_birth ||
-      !donor_gender ||
-      !donor_weight ||
-      !quantity ||
-      !donor_phone_no
-    ) {
+    if (!donor_name || !date_of_birth || !donor_gender || !donor_weight || !donor_phone_no || !quantity) {
       return res.status(400).json({
         success: false,
-        message:
-          "Name, date of birth, gender, weight, quantity and phone number are required.",
+        message: "Name, date of birth, gender, weight, phone number and quantity are required.",
       });
     }
 
@@ -521,6 +515,80 @@ router.put("/donors/:id", protect(["STAFF"]), async (req, res) => {
       success: false,
       message: "Failed to update donor.",
     });
+  }
+});
+
+// ─────────────────────────────────────────────
+// GET /api/staff/dashboard
+// Protected — Staff only
+// Returns overview stats visible to staff
+// ─────────────────────────────────────────────
+router.get("/dashboard", protect(["STAFF"]), async (req, res) => {
+  try {
+    const [
+      totalDonors,
+      bloodComponents,
+      totalRequests,
+      pendingApproval,
+      recentRequests,
+      stockOverview,
+    ] = await Promise.all([
+      pool.query(`SELECT COUNT(*) FROM donor`),
+      pool.query(`
+        SELECT COUNT(DISTINCT component_type)
+        FROM blood_stock
+        WHERE available_units > 0
+        AND (expiry_date >= CURRENT_DATE OR expiry_date IS NULL)`),
+      pool.query(`SELECT COUNT(*) FROM blood_request`),
+      pool.query(`SELECT COUNT(*) FROM blood_request WHERE status = 'PENDING'`),
+      pool.query(`
+        SELECT
+          br.request_id,
+          br.patient_name,
+          br.blood_group,
+          br.component_type,
+          br.urgency,
+          br.status,
+          br.request_date,
+          c.name AS requester_name
+        FROM blood_request br
+        INNER JOIN customer c ON br.customer_id = c.customer_id
+        ORDER BY br.request_date DESC
+        LIMIT 5`),
+      pool.query(`
+        SELECT
+          blood_group,
+          component_type,
+          total_available_units,
+          availability_status
+        FROM blood_availability_summary
+        ORDER BY
+          CASE availability_status
+            WHEN 'Critical'     THEN 1
+            WHEN 'Low'          THEN 2
+            WHEN 'Stable'       THEN 3
+            WHEN 'Out of Stock' THEN 4
+          END,
+          total_available_units ASC
+        LIMIT 8`),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        stats: {
+          total_donors:    parseInt(totalDonors.rows[0].count),
+          blood_components: parseInt(bloodComponents.rows[0].count),
+          total_requests:  parseInt(totalRequests.rows[0].count),
+          pending_approval: parseInt(pendingApproval.rows[0].count),
+        },
+        recent_requests: recentRequests.rows,
+        stock_overview:  stockOverview.rows,
+      },
+    });
+  } catch (err) {
+    console.error("Staff dashboard error:", err.message);
+    res.status(500).json({ success: false, message: "Failed to fetch dashboard data." });
   }
 });
 

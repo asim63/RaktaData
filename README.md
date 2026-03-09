@@ -20,13 +20,13 @@ A full-stack blood bank management system for tracking donors, managing blood st
 
 ## Tech Stack
 
-| Layer     | Technology                              |
-|-----------|-----------------------------------------|
-| Database  | PostgreSQL                              |
-| Backend   | Node.js, Express.js                     |
-| Frontend  | React 18, Vite                          |
-| Auth      | JWT (jsonwebtoken), bcrypt              |
-| Styling   | Plain CSS with CSS variables            |
+| Layer    | Technology                   |
+| -------- | ---------------------------- |
+| Database | PostgreSQL                   |
+| Backend  | Node.js, Express.js          |
+| Frontend | React 18, Vite               |
+| Auth     | JWT (jsonwebtoken), bcrypt   |
+| Styling  | Plain CSS with CSS variables |
 
 ---
 
@@ -119,6 +119,7 @@ CLIENT_URL=http://localhost:5173
 ```
 
 > **Tip:** Generate a secure JWT secret with:
+>
 > ```bash
 > node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 > ```
@@ -168,10 +169,10 @@ npm run dev
 
 This starts both servers concurrently:
 
-| Service  | URL                      |
-|----------|--------------------------|
-| API      | http://localhost:5000     |
-| Frontend | http://localhost:5173     |
+| Service  | URL                   |
+| -------- | --------------------- |
+| API      | http://localhost:5000 |
+| Frontend | http://localhost:5173 |
 
 ---
 
@@ -179,12 +180,12 @@ This starts both servers concurrently:
 
 All protected routes require an `Authorization: Bearer <token>` header.
 
-| Prefix           | Role      | Description                                              |
-|------------------|-----------|----------------------------------------------------------|
-| `/api/auth`      | Public    | Login                                                    |
-| `/api/customer`  | Customer  | Submit requests, check availability, find donors         |
-| `/api/staff`     | Staff     | Register donors, log donations, view dashboard           |
-| `/api/admin`     | Admin     | Full access — stock, requests, staff, transactions       |
+| Prefix          | Role     | Description                                        |
+| --------------- | -------- | -------------------------------------------------- |
+| `/api/auth`     | Public   | Login                                              |
+| `/api/customer` | Customer | Submit requests, check availability, find donors   |
+| `/api/staff`    | Staff    | Register donors, log donations, view dashboard     |
+| `/api/admin`    | Admin    | Full access — stock, requests, staff, transactions |
 
 ---
 
@@ -194,21 +195,21 @@ The schema defines 8 core tables: `users`, `admin`, `staff`, `customer`, `donor`
 
 Key automation:
 
-| Mechanism     | What it does                                                                 |
-|---------------|------------------------------------------------------------------------------|
-| Trigger 1     | After a donation, sets donor `eligibility_status = FALSE` and logs `last_donation_date` |
-| Trigger 3     | After a request is inserted, auto-sets status to `REJECTED` or `PENDING` based on stock |
-| Trigger 6     | Validates that donation blood group matches the registered donor's blood group |
-| Cron job      | Runs daily — resets `eligibility_status = TRUE` for donors 90+ days since last donation |
-| Procedures    | `approve_blood_request` and `reject_blood_request` run as atomic transactions |
+| Mechanism  | What it does                                                                            |
+| ---------- | --------------------------------------------------------------------------------------- |
+| Trigger 1  | After a donation, sets donor `eligibility_status = FALSE` and logs `last_donation_date` |
+| Trigger 3  | After a request is inserted, auto-sets status to `REJECTED` or `PENDING` based on stock |
+| Trigger 6  | Validates that donation blood group matches the registered donor's blood group          |
+| Cron job   | Runs daily — resets `eligibility_status = TRUE` for donors 90+ days since last donation |
+| Procedures | `approve_blood_request` and `reject_blood_request` run as atomic transactions           |
 
 ---
 
 ## Default Credentials (development only)
 
-| Role     | Username | Password  |
-|----------|----------|-----------|
-| Admin    | admin    | admin123  |
+| Role  | Username | Password |
+| ----- | -------- | -------- |
+| Admin | admin    | admin123 |
 
 > Staff accounts are created by admin through the Staff panel. Customer accounts are created via the public registration page.
 
