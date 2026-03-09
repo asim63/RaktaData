@@ -180,20 +180,22 @@ SELECT
     bs.added_date,
     bs.expiry_date,
     bs.last_updated,
-
-    -- Days remaining
-    bs.expiry_date - CURRENT_DATE        AS days_until_expiry,
-
-    -- Expiry urgency
+    bs.expiry_date - CURRENT_DATE AS days_until_expiry,
     CASE
-        WHEN (bs.expiry_date - CURRENT_DATE)::INT <= 2
-        THEN 'Expiring Soon'
-        WHEN (bs.expiry_date - CURRENT_DATE)::INT <= 7
-        THEN 'Expiring This Week'
+        WHEN (bs.expiry_date - CURRENT_DATE)::INT <= 2 THEN 'Expiring Soon'
+        WHEN (bs.expiry_date - CURRENT_DATE)::INT <= 7 THEN 'Expiring This Week'
         ELSE 'Good'
-    END                                  AS expiry_status
+    END AS expiry_status,
 
-FROM blood_stock bs       
-WHERE available_units > 0 
-and bs.expiry_date >= CURRENT_DATE  -- only show active, non-expired stock
+    -- ← add this!
+    CASE
+        WHEN bs.available_units = 0  THEN 'Out of Stock'
+        WHEN bs.available_units < 5  THEN 'Critical'
+        WHEN bs.available_units < 10 THEN 'Low'
+        ELSE 'Stable'
+    END AS availability_status
+
+FROM blood_stock bs
+WHERE bs.available_units > 0
+AND bs.expiry_date >= CURRENT_DATE
 ORDER BY bs.blood_group, bs.component_type, bs.expiry_date ASC;
