@@ -6,48 +6,18 @@
 -- stored procedure in the system.
 
 -- SECTION 1: USERS
--- Creates login accounts for:
--- 2 Admins, 2 Staff, 3 Customers
--- Note: passwords are bcrypt hashes of 'password123'
--- In real system, hash via backend before inserting
--- For testing, we use plain text (change later)
+-- First login as admin, then create staff and customer users
 -- ============================================
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-INSERT INTO users (username, password, role) VALUES
--- Admins
-('admin_asim',   'password123', 'ADMIN'),    -- user_id = 1
-('admin_dibya',  'password123', 'ADMIN'),    -- user_id = 2
+INSERT INTO users (username, password, role)
+VALUES ('admin', crypt('admin123', gen_salt('bf', 10)), 'ADMIN');
 
--- Staff
-('staff_galij',  'password123', 'STAFF'),    -- user_id = 3
-('staff_nalisha','password123', 'STAFF'),    -- user_id = 4
-
--- Customers
-('bir_hospital',       'password123', 'CUSTOMER'), -- user_id = 5
-('teaching_hospital',  'password123', 'CUSTOMER'), -- user_id = 6
-('patan_hospital',     'password123', 'CUSTOMER'); -- user_id = 7
-
-
--- SECTION 2: ADMINS
-
-INSERT INTO admin (user_id, admin_name) VALUES
-(1, 'Asim Poudel'),    -- admin_id = 1
-(2, 'Dibya Shakya');   -- admin_id = 2
-
-
--- SECTION 3: STAFF
-
-INSERT INTO staff (user_id, staff_name) VALUES
-(3, 'Galij Sunuwar'),   -- staff_id = 1
-(4, 'Nalisha Shakya');  -- staff_id = 2
-
--- SECTION 4: CUSTOMERS
-
-INSERT INTO customer (user_id, name, date_of_birth, phone_no, email, address) VALUES
-(5, 'Bir Hospital',      '1889-01-01', '9801234567', 'bir@hospital.gov.np',      'Mahabauddha, Kathmandu'),
-(6, 'Teaching Hospital', '1956-01-01', '9801234568', 'teaching@hospital.gov.np', 'Maharajgunj, Kathmandu'),
-(7, 'Patan Hospital',    '1956-01-01', '9801234569', 'patan@hospital.gov.np',    'Lagankhel, Lalitpur');
-
+INSERT INTO admin (user_id, admin_name)
+VALUES (
+  (SELECT user_id FROM users WHERE username = 'admin'),
+  'System Admin'
+);
 -- SECTION 5: DONORS
 -- Realistic Nepali donors with various blood groups
 -- Some eligible, some not (for testing)
