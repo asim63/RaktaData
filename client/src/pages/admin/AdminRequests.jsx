@@ -71,7 +71,7 @@ const AdminRequests = () => {
                               <span style={{ fontSize: "0.8rem", color: "var(--text-3)" }}>{r.component_type}</span>
                             </div>
                           </td>
-                          <td style={{ fontWeight: 600 }}>{r.quantity}</td>
+                          <td style={{ fontWeight: 600 }}>{r.requested_quantity}</td>
                           <td><span className={`badge ${r.urgency === "EMERGENCY" ? "badge-red badge-pulse" : "badge-blue"}`}>{r.urgency === "EMERGENCY" ? "🚨 Emergency" : "Normal"}</span></td>
                           <td style={{ fontSize: "0.82rem", color: "var(--text-3)" }}>{r.request_date ? new Date(r.request_date).toLocaleDateString() : "—"}</td>
                           <td><span className={`badge ${r.status === "APPROVED" ? "badge-green" : r.status === "REJECTED" ? "badge-red" : "badge-amber"}`}>{r.status}</span></td>

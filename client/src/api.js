@@ -78,10 +78,17 @@ export const adminDeleteDonor = (id) =>
     headers: headers(),
   }).then(handleRes);
 
-export const adminGetBloodStock = () =>
-  fetch(`${BASE_URL}/admin/blood-stock/batches`, {
+  export const adminGetBloodStockOverview = () =>
+  fetch(`${BASE_URL}/admin/blood-stock`, {
     headers: headers(),
   }).then(handleRes);
+
+  export const adminGetBloodStock = (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return fetch(`${BASE_URL}/admin/blood-stock/batches${qs ? "?" + qs : ""}`, {
+    headers: headers(),
+  }).then(handleRes);
+};
 
 export const adminAddBloodStock = (body) =>
   fetch(`${BASE_URL}/admin/blood-stock`, {

@@ -31,7 +31,7 @@ const AdminTransactions = () => {
             <div className="table-wrap">
               <table>
                 <thead>
-                  <tr><th>ACTION</th><th>BLOOD TYPE</th><th>COMPONENT</th><th>QTY</th><th>DATE</th><th>BY</th><th>NOTE</th></tr>
+                  <tr><th>ACTION</th><th>BLOOD TYPE</th><th>COMPONENT</th><th>QTY</th><th>DATE</th><th>BY</th></tr>
                 </thead>
                 <tbody>
                   {transactions.map((t,i)=>(
@@ -42,7 +42,6 @@ const AdminTransactions = () => {
                       <td style={{fontWeight:600}}>{t.quantity_change ?? t.quantity}</td>
                       <td style={{fontSize:"0.82rem",color:"var(--text-3)"}}>{t.transaction_date ? new Date(t.transaction_date).toLocaleDateString() : "—"}</td>
                       <td style={{fontSize:"0.82rem",color:"var(--text-3)"}}>{t.performed_by || t.handled_by || "—"}</td>
-                      <td style={{fontSize:"0.82rem",color:"var(--text-4)"}}>{t.notes || t.note || "—"}</td>
                     </tr>
                   ))}
                   {transactions.length===0 && <tr><td colSpan={7} style={{textAlign:"center",padding:"32px",color:"var(--text-3)"}}>No transactions found.</td></tr>}
