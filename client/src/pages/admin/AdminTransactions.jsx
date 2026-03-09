@@ -39,9 +39,9 @@ const AdminTransactions = () => {
                       <td><span className={`badge ${actionBadge(t.action)}`}>{t.action}</span></td>
                       <td><div className="blood-chip blood-chip-sm">{t.blood_group}</div></td>
                       <td style={{fontSize:"0.875rem"}}>{t.component_type}</td>
-                      <td style={{fontWeight:600}}>{t.quantity_change ?? t.qty}</td>
+                      <td style={{fontWeight:600}}>{t.quantity_change ?? t.quantity}</td>
                       <td style={{fontSize:"0.82rem",color:"var(--text-3)"}}>{t.transaction_date ? new Date(t.transaction_date).toLocaleDateString() : "—"}</td>
-                      <td style={{fontSize:"0.82rem",color:"var(--text-3)"}}>{t.performed_by || t.by || "—"}</td>
+                      <td style={{fontSize:"0.82rem",color:"var(--text-3)"}}>{t.performed_by || t.handled_by || "—"}</td>
                       <td style={{fontSize:"0.82rem",color:"var(--text-4)"}}>{t.notes || t.note || "—"}</td>
                     </tr>
                   ))}
