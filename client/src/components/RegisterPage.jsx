@@ -14,6 +14,10 @@ const RegisterPage = ({ setPage, onLogin, dark, onToggleTheme }) => {
 
   const handleReg = async () => {
     if (!form.name || !form.username || !form.password || !form.phone_no) { showToast("Fill all required fields", "error"); return; }
+    if (!form.phone_no.match(/^(98|97)\d{8}$/)) {
+      showToast("Invalid phone number format", "error");
+      return;
+    }
     if (form.password !== form.confirm) { showToast("Passwords do not match", "error"); return; }
     setLoading(true);
     try {

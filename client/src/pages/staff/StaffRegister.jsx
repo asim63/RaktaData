@@ -55,8 +55,16 @@ const StaffRegister = () => {
           <div className="form-group">
             <label className="form-label">Gender <span className="req">*</span></label>
             <div className="radio-group" style={{marginTop:"8px"}}>
-              {["Male","Female","Other"].map(g=>(
-                <label key={g} className="radio-label"><input type="radio" name="gender" checked={form.donor_gender===g} onChange={()=>up("donor_gender",g)}/>{g}</label>
+              {["Male", "Female", "Other"].map(g => (
+                 <label key={g} className="radio-label">
+                   <input 
+                      type="radio" 
+                      name="gender" 
+                      checked={form.donor_gender === g.toUpperCase()}  // ← compare uppercase
+                      onChange={() => up("donor_gender", g.toUpperCase())}  // ← store uppercase
+                     />
+                    {g}  {/* display still shows "Male" nicely */}
+                 </label>
               ))}
             </div>
           </div>
