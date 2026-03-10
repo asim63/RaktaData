@@ -322,12 +322,12 @@ router.post("/donors", protect(["STAFF"]), async (req, res) => {
     // Trigger 6 fires automatically:
     //   → validates blood group matches donor
     const donationResult = await pool.query(
-      `INSERT INTO donation
-        (donor_id, quantity, donor_blood_group, component_type)
-       VALUES ($1, $2, $3, $4)
-       RETURNING *`,
-      [donor_id, quantity, donor_blood_group || null, component_type],
-    );
+  `INSERT INTO donation
+    (donor_id, quantity, donor_blood_group, component_type)
+   VALUES ($1, $2, $3, $4)
+   RETURNING *`,
+  [donor_id, quantity, donorResult.rows[0].donor_blood_group || null, component_type],
+);
 
     // ─── Step 7: Commit transaction ───
     await pool.query("COMMIT");
@@ -354,80 +354,55 @@ router.post("/donors", protect(["STAFF"]), async (req, res) => {
 // ─────────────────────────────────────────────
 // POST /api/staff/donations
 // Protected — Staff only
-// Log new donation for RETURNING donor only
-// Donor already exists in the system
-// Triggers that fire automatically:
-//   Trigger 1 → updates eligibility + last_donation_date
-//   Trigger 6 → validates blood group match
+
+// ─────────────────────────────────────────────
+// POST /api/staff/donations
+// Log a donation for a returning donor
 // ─────────────────────────────────────────────
 router.post("/donations", protect(["STAFF"]), async (req, res) => {
-  const { donor_id, quantity, component_type } = req.body;
-
+  const { donor_id, quantity, component_type, donation_date } = req.body;
+  const staff_id = req.user.staff_id;
   try {
-    // ─── Step 1: Validate required fields ───
-    if (!donor_id || !quantity || !component_type) {
-      return res.status(400).json({
-        success: false,
-        message: "Donor ID, quantity and component type are required.",
-      });
-    }
+    if (!donor_id || !quantity || !component_type)
+      return res.status(400).json({ success: false, message: "Donor ID, quantity and component type are required." });
 
-    // ─── Step 2: Check donor exists ───
-    const donorResult = await pool.query(
-      `SELECT donor_id, donor_name, donor_blood_group, eligibility_status
-       FROM donor WHERE donor_id = $1`,
-      [donor_id],
-    );
+    const donor = await pool.query("SELECT donor_id, donor_name FROM donor WHERE donor_id = $1", [donor_id]);
+    if (donor.rows.length === 0)
+      return res.status(404).json({ success: false, message: "Donor not found." });
 
-    if (donorResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Donor not found.",
-      });
-    }
+    await pool.query(
+  `INSERT INTO donation (donor_id, quantity, donor_blood_group, component_type)
+   VALUES ($1, $2, $3, $4)`,
+  [donor_id, quantity, donor.rows[0].donor_blood_group, component_type]
+);
 
-    const donor = donorResult.rows[0];
-
-    // ─── Step 3: Insert donation ───
-    // Blood group fetched from DB — never trust frontend
-    // Trigger 1 fires automatically
-    // Trigger 6 fires automatically
-    const result = await pool.query(
-      `INSERT INTO donation
-        (donor_id, quantity, donor_blood_group, component_type)
-       VALUES ($1, $2, $3, $4)
-       RETURNING *`,
-      [donor_id, quantity, donor.donor_blood_group || null, component_type],
-    );
-
-    // ─── Step 4: Fetch updated donor status ───
-    const updatedDonor = await pool.query(
-      `SELECT
-        donor_name,
-        eligibility_status,
-        last_donation_date,
-        last_donation_date + INTERVAL '90 days' AS eligible_again_date
-       FROM donor WHERE donor_id = $1`,
-      [donor_id],
-    );
-
-    res.status(201).json({
-      success: true,
-      message: "Donation logged successfully!",
-      data: {
-        donation: result.rows[0],
-        donor: updatedDonor.rows[0],
-      },
-    });
+    res.status(201).json({ success: true, message: `Donation logged for ${donor.rows[0].donor_name}!` });
   } catch (err) {
     console.error("Log donation error:", err.message);
-    res.status(500).json({
-      success: false,
-      message: "Failed to log donation.",
-    });
+    res.status(500).json({ success: false, message: "Failed to log donation." });
   }
 });
 
+// ─────────────────────────────────────────────
+// GET /api/staff/donations/:donor_id
+// Get donation history for a specific donor
+// ─────────────────────────────────────────────
+router.get("/donations/:donor_id", protect(["STAFF"]), async (req, res) => {
+  const { donor_id } = req.params;
+  try {
+    const result = await pool.query(
+      `SELECT donation_id, donation_date, component_type, quantity, donor_blood_group
+       FROM donation
+       WHERE donor_id = $1
+       ORDER BY donation_date DESC`,
+      [donor_id]
+    );
+    res.status(200).json({ success: true, count: result.rows.length, data: result.rows });
+  } catch (err) {
+    console.error("Donation history error:", err.message);
+    res.status(500).json({ success: false, message: "Failed to fetch donation history." });
+  }
+});
 // ─────────────────────────────────────────────
 // PUT /api/staff/donors/:id
 // Protected — Staff only
