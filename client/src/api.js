@@ -54,6 +54,13 @@ export const staffUpdateDonor = (id, body) =>
     body: JSON.stringify(body),
   }).then(handleRes);
 
+  export const staffLogDonation = (donor_id, body) =>
+  fetch(`${BASE_URL}/staff/donations`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({ donor_id, ...body }),
+  }).then(handleRes);
+  
 // ── Admin ─────────────────────────────────────────────────────────────────────
 export const adminGetDashboard = () =>
   fetch(`${BASE_URL}/admin/dashboard`, { headers: headers() }).then(handleRes);

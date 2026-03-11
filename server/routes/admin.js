@@ -169,6 +169,45 @@ router.put("/donors/:id", protect(["ADMIN"]), async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
+// DELETE /api/admin/donors/:id
+// Protected — Admin only
+// Deletes donor and all their donations (CASCADE)
+// ─────────────────────────────────────────────
+router.delete("/donors/:id", protect(["ADMIN"]), async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const existing = await pool.query(
+      "SELECT donor_id, donor_name FROM donor WHERE donor_id = $1",
+      [id]
+    );
+
+    if (existing.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Donor not found." });
+    }
+
+    const donor_name = existing.rows[0].donor_name;
+
+    await pool.query("BEGIN");
+
+    // ─── Delete donations first (FK constraint) ───
+    await pool.query("DELETE FROM donation WHERE donor_id = $1", [id]);
+
+    // ─── Now safe to delete donor ───
+    await pool.query("DELETE FROM donor WHERE donor_id = $1", [id]);
+
+    await pool.query("COMMIT");
+
+    res.status(200).json({ success: true, message: `${donor_name} deleted successfully!` });
+
+  } catch (err) {
+    await pool.query("ROLLBACK");
+    console.error("Delete donor error:", err.message);
+    res.status(500).json({ success: false, message: "Failed to delete donor." });
+  }
+});
+
+// ─────────────────────────────────────────────
 // GET /api/admin/blood-stock
 // Protected — Admin only
 // Blood availability overview

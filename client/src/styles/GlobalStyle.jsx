@@ -41,9 +41,9 @@ const GlobalStyle = () => (
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 99px; }
 
-    @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
     @keyframes slideIn { from { opacity:0; transform: translateX(-12px); } to { opacity:1; transform: translateX(0); } }
-    .fade-in { animation: fadeIn 0.35s ease forwards; }
+    .fade-in { animation: fadeIn 0.35s ease; }
     .slide-in { animation: slideIn 0.3s ease forwards; }
 
     /* Public Nav */
@@ -410,6 +410,10 @@ const GlobalStyle = () => (
       .pub-nav { padding:0 20px; }
       .pub-nav-links { display:none; }
     }
+    ::placeholder {
+    color: var(--text-3);
+    opacity: 0.5;
+}
   `}</style>
 );
 
