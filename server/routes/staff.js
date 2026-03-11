@@ -384,12 +384,49 @@ router.post("/donations", protect(["STAFF"]), async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
+// GET /api/staff/donations/recent
+// Protected — Staff only
+// Get recent donations across all donors, ordered by donation_id DESC
+// Query params (optional):
+//   limit (default 25, max 200)
+// ─────────────────────────────────────────────
+router.get("/donations/recent", protect(["STAFF"]), async (req, res) => {
+  const rawLimit = Number.parseInt(req.query.limit, 10);
+  const limit = Number.isFinite(rawLimit) ? Math.min(Math.max(rawLimit, 1), 200) : 25;
+
+  try {
+    const result = await pool.query(
+      `SELECT
+        dn.donor_name,
+        dn.donor_phone_no,
+        dn.donor_blood_group,
+        d.component_type,
+        d.donation_date,
+        d.donation_id
+      FROM donation d
+      JOIN donor dn ON dn.donor_id = d.donor_id
+      ORDER BY d.donation_id DESC
+      LIMIT $1`,
+      [limit],
+    );
+
+    res.status(200).json({ success: true, count: result.rows.length, data: result.rows });
+  } catch (err) {
+    console.error("Recent donations error:", err.message);
+    res.status(500).json({ success: false, message: "Failed to fetch recent donations." });
+  }
+});
+
+// ─────────────────────────────────────────────
 // GET /api/staff/donations/:donor_id
 // Get donation history for a specific donor
 // ─────────────────────────────────────────────
-router.get("/donations/:donor_id", protect(["STAFF"]), async (req, res) => {
-  const { donor_id } = req.params;
+router.get("/donations/:donor_id", protect(["STAFF"]), async (req, res, next) => {
+  const donor_id = Number.parseInt(req.params.donor_id, 10);
   try {
+    if (!Number.isFinite(donor_id)) {
+      return next();
+    }
     const result = await pool.query(
       `SELECT donation_id, donation_date, component_type, quantity, donor_blood_group
        FROM donation
