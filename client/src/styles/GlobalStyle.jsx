@@ -198,6 +198,8 @@ const GlobalStyle = () => (
     td { padding: 12px 14px; font-size:0.875rem; color:var(--text-2); border-bottom: 1px solid var(--border); }
     tr:last-child td { border-bottom:none; }
     tr:hover td { background: var(--bg); }
+    .donation-id-hover { opacity:0; transition: opacity 0.15s; font-size:0.72rem; color:var(--text-4); margin-top:2px; }
+    tr:hover .donation-id-hover { opacity:1; }
 
     /* Section heading */
     .section-tag { font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--red); margin-bottom:10px; }

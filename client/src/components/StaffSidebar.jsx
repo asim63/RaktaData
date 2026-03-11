@@ -6,6 +6,7 @@ const StaffSidebar = ({ page, setPage, user, onLogout, dark, onToggleTheme }) =>
   const nav = [
     {id:"Staff-Dashboard", label:"Dashboard",         icon:<Icon.Dashboard/>},
     {id:"Staff-Donors",    label:"Donor Details",     icon:<Icon.Donors/>},
+    {id:"Staff-Donations", label:"Donation History",  icon:<Icon.ClipBoard/>},
     {id:"Staff-Register",  label:"Donor Registration",icon:<Icon.UserPlus/>},
   ];
   return (

@@ -19,6 +19,7 @@ import RegisterPage from "./pages/public/RegisterPage";
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffDonors from "./pages/staff/StaffDonors";
 import StaffRegister from "./pages/staff/StaffRegister";
+import StaffDonationHistory from "./pages/staff/StaffDonationHistory";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -101,6 +102,7 @@ export default function App() {
     const staffPages = {
       "Staff-Dashboard": <StaffDashboard />,
       "Staff-Donors":    <StaffDonors setPage={setPage} />,
+      "Staff-Donations": <StaffDonationHistory />,
       "Staff-Register":  <StaffRegister />,
     };
     return (

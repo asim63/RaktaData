@@ -60,6 +60,11 @@ export const staffUpdateDonor = (id, body) =>
     headers: headers(),
     body: JSON.stringify({ donor_id, ...body }),
   }).then(handleRes);
+
+export const staffGetRecentDonations = (limit = 25) =>
+  fetch(`${BASE_URL}/staff/donations/recent?limit=${encodeURIComponent(limit)}`, {
+    headers: headers(),
+  }).then(handleRes);
   
 // ── Admin ─────────────────────────────────────────────────────────────────────
 export const adminGetDashboard = () =>
