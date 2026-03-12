@@ -35,11 +35,11 @@ const RegisterPage = ({ setPage, onClose, onLogin }) => {
           <div style={{ textAlign: "center", marginBottom: "24px", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
             <Logo/>
             <h2 style={{ fontFamily: "var(--font-head)", fontWeight: 700, fontSize: "1.2rem", margin: 0 }}>Create account</h2>
-            <p style={{ fontSize: "0.82rem", color: "var(--text-3)", margin: 0 }}>Register as a hospital or clinic</p>
+            <p style={{ fontSize: "0.82rem", color: "var(--text-3)", margin: 0 }}>Register as a customer</p>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             <div className="form-grid-2" style={{margin:0}}>
-              <div className="form-group"><label className="form-label">Name <span className="req">*</span></label><input className="form-input" placeholder="Hospital / Clinic name" value={form.name} onChange={e=>up("name",e.target.value)}/></div>
+              <div className="form-group"><label className="form-label">Name <span className="req">*</span></label><input className="form-input" placeholder="Name" value={form.name} onChange={e=>up("name",e.target.value)}/></div>
               <div className="form-group"><label className="form-label">Date of Birth</label><input className="form-input" type="date" value={form.date_of_birth} onChange={e=>up("date_of_birth",e.target.value)}/></div>
             </div>
             <div className="form-grid-2" style={{margin:0}}>
