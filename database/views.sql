@@ -187,7 +187,7 @@ SELECT
         ELSE 'Good'
     END AS expiry_status,
 
-    -- ← add this!
+    -- â†� add this!
     CASE
         WHEN bs.available_units = 0  THEN 'Out of Stock'
         WHEN bs.available_units < 5  THEN 'Critical'
@@ -198,4 +198,4 @@ SELECT
 FROM blood_stock bs
 WHERE bs.available_units > 0
 AND bs.expiry_date >= CURRENT_DATE
-ORDER BY bs.blood_group, bs.component_type, bs.expiry_date ASC;
+order by bs.expiry_date, bs.blood_group, bs.component_type;
