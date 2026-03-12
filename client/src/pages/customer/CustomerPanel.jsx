@@ -57,6 +57,13 @@ const CustomerPanel = ({ user, onLogout, dark, onToggleTheme }) => {
       .finally(() => setDonorLoading(false));
   };
 
+  // ── Auto-load donors when tab first becomes active (direct sidebar click) ──
+  useEffect(() => {
+    if (tab === "donors" && donors.length === 0 && !donorLoading) {
+      loadDonors();
+    }
+  }, [tab]);
+
   // ── Availability ──────────────────────────────────────────────────────────
   const [stock, setStock]               = useState([]);
   const [stockLoading, setStockLoading] = useState(false);

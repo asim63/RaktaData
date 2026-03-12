@@ -1,5 +1,5 @@
-import Logo from "./Logo";
-import Icon from "./Icons";
+import Logo from "../../components/Logo";    
+import Icon from "../../components/Icons";   
 
 const AdminSidebar = ({ page, setPage, user, onLogout, dark, onToggleTheme }) => {
   const initials = user.name.split(" ").map(n=>n[0]).join("").slice(0,2);
@@ -8,6 +8,7 @@ const AdminSidebar = ({ page, setPage, user, onLogout, dark, onToggleTheme }) =>
     {id:"Admin-Donors",      label:"Donors",            icon:<Icon.Donors/>},
     {id:"Admin-BloodStock",  label:"Blood Stock",       icon:<Icon.Package/>},
     {id:"Admin-Requests",    label:"Requests",          icon:<Icon.ClipBoard/>},
+    {id:"Admin-Customers",   label:"Customers",         icon:<Icon.Donors/>},
     {id:"Admin-Staff",       label:"Staff",             icon:<Icon.Staff/>},
     {id:"Admin-Transactions",label:"Transactions",      icon:<Icon.Activity/>},
   ];

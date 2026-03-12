@@ -27,6 +27,7 @@ import AdminDonors from "./pages/admin/AdminDonors";
 import AdminBloodStock from "./pages/admin/AdminBloodStock";
 import AdminRequests from "./pages/admin/AdminRequests";
 import AdminStaff from "./pages/admin/AdminStaff";
+import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminTransactions from "./pages/admin/AdminTransactions";
 
 // Customer panel
@@ -126,6 +127,7 @@ export default function App() {
       "Admin-Donors":       <AdminDonors />,
       "Admin-BloodStock":   <AdminBloodStock />,
       "Admin-Requests":     <AdminRequests />,
+      "Admin-Customers":    <AdminCustomers />,
       "Admin-Staff":        <AdminStaff />,
       "Admin-Transactions": <AdminTransactions />,
     };
