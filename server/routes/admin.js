@@ -754,4 +754,29 @@ router.get("/dashboard", protect(["ADMIN"]), async (req, res) => {
   }
 });
 
+// GET /api/admin/customers
+router.get("/customers", protect(["ADMIN"]), async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        c.customer_id,
+        c.name,
+        c.phone_no,
+        c.email,
+        c.address,
+        u.username,
+        u.date_of_creation,
+        COUNT(br.request_id) AS total_requests
+      FROM customer c
+      INNER JOIN users u ON c.user_id = u.user_id
+      LEFT JOIN blood_request br ON c.customer_id = br.customer_id
+      GROUP BY c.customer_id, u.username, u.date_of_creation
+      ORDER BY u.date_of_creation DESC
+    `);
+    res.status(200).json({ success: true, count: result.rows.length, data: result.rows });
+  } catch (err) {
+    console.error("Fetch customers error:", err.message);
+    res.status(500).json({ success: false, message: "Failed to fetch customers." });
+  }
+});
 module.exports = router;

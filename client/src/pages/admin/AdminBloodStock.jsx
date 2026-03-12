@@ -235,7 +235,6 @@ const AdminBloodStock = () => {
                         <th>ADDED DATE</th>
                         <th>EXPIRY DATE</th>
                         <th>DAYS LEFT</th>
-                        <th>STATUS</th>
                         <th>ACTIONS</th>
                       </tr>
                     </thead>
@@ -259,11 +258,6 @@ const AdminBloodStock = () => {
                                 : "var(--text-2)"
                             }}>
                               {b.days_until_expiry} days
-                            </span>
-                          </td>
-                          <td>
-                            <span className={`badge ${statusBadge(b.availability_status)}`}>
-                              {b.availability_status}
                             </span>
                           </td>
                           <td>

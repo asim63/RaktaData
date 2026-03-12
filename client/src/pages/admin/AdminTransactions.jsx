@@ -31,12 +31,13 @@ const AdminTransactions = () => {
             <div className="table-wrap">
               <table>
                 <thead>
-                  <tr><th>ACTION</th><th>BLOOD TYPE</th><th>COMPONENT</th><th>QTY</th><th>DATE</th><th>BY</th></tr>
+                  <tr><th>ACTION</th><th>Customer</th><th>BLOOD TYPE</th><th>COMPONENT</th><th>QTY</th><th>DATE</th><th>BY</th></tr>
                 </thead>
                 <tbody>
                   {transactions.map((t,i)=>(
                     <tr key={i}>
                       <td><span className={`badge ${actionBadge(t.action)}`}>{t.action}</span></td>
+                      <td style={{fontSize:"0.875rem"}}>{t.customer_name || "—"}</td>
                       <td><div className="blood-chip blood-chip-sm">{t.blood_group}</div></td>
                       <td style={{fontSize:"0.875rem"}}>{t.component_type}</td>
                       <td style={{fontWeight:600}}>{t.quantity_change ?? t.quantity}</td>

@@ -76,7 +76,6 @@ const StaffDonors = ({ setPage }) => {
           </div>
           <select className="form-input" style={{ width: "165px" }} value={bgFilter} onChange={e => setBgFilter(e.target.value)}>
             <option value="">All Blood Groups</option>
-            <option value="">Select</option>
             {["A+","A-","B+","B-","AB+","AB-","O+","O-"].map(b => <option key={b}>{b}</option>)}
           </select>
           <select className="form-input" style={{ width: "140px" }} value={eligFilter} onChange={e => setEligFilter(e.target.value)}>

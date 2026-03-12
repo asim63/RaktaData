@@ -155,6 +155,9 @@ export const adminDeleteStaff = (id) =>
     headers: headers(),
   }).then(handleRes);
 
+  export const adminGetCustomers = () =>
+  fetch(`${BASE_URL}/admin/customers`, { headers: headers() }).then(handleRes);
+
 // ── Customer ──────────────────────────────────────────────────────────────────
 export const customerGetRequests = () =>
   fetch(`${BASE_URL}/customer/requests`, { headers: headers() }).then(handleRes);
