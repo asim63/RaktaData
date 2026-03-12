@@ -57,6 +57,7 @@ const StaffDonationHistory = () => {
                     <th>DONOR</th>
                     <th>PHONE</th>
                     <th>BLOOD GROUP</th>
+                    <th>UNITS</th>
                     <th>COMPONENT</th>
                     <th>DONATION DATE</th>
                   </tr>
@@ -70,13 +71,14 @@ const StaffDonationHistory = () => {
                       </td>
                       <td style={{ fontSize: "0.85rem" }}>{d.donor_phone_no || "—"}</td>
                       <td><div className="blood-chip blood-chip-sm">{d.donor_blood_group || "—"}</div></td>
+                      <td style={{ fontSize: "0.85rem" }}>{d.quantity || "—"}</td>
                       <td style={{ fontSize: "0.85rem" }}>{d.component_type}</td>
                       <td style={{ fontSize: "0.85rem" }}>{fmtDate(d.donation_date)}</td>
                     </tr>
                   ))}
                   {donations.length === 0 && (
                     <tr>
-                      <td colSpan={5} style={{ textAlign: "center", padding: "32px", color: "var(--text-3)" }}>
+                      <td colSpan={6} style={{ textAlign: "center", padding: "32px", color: "var(--text-3)" }}>
                         No donation records found.
                       </td>
                     </tr>

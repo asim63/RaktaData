@@ -45,7 +45,7 @@ const HomePage = ({ setPage, onLogin }) => {
               </button>
             </div>
             <div className="hero-stats">
-              {[["1,200+","Active Donors"],["340+","Lives Saved"],["8","Blood Types"]].map(([v,l]) => (
+              {[["30+","Active Donors"],["4+","Lives Saved"],["8","Blood Types"]].map(([v,l]) => (
                 <div key={l}>
                   <div className="hero-stat-val">{v}</div>
                   <div className="hero-stat-label">{l}</div>

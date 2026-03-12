@@ -258,10 +258,10 @@ router.post("/donors", protect(["STAFF"]), async (req, res) => {
 
   try {
     // ─── Step 1: Validate donor required fields ───
-    if (!donor_name || !date_of_birth || !donor_gender || !donor_weight || !donor_phone_no || !quantity) {
+    if (!donor_name || !date_of_birth || !donor_gender || !donor_weight || !donor_phone_no) {
       return res.status(400).json({
         success: false,
-        message: "Name, date of birth, gender, weight, phone number and quantity are required.",
+        message: "Name, date of birth, gender, weight, and phone number are required.",
       });
     }
 
@@ -401,6 +401,7 @@ router.get("/donations/recent", protect(["STAFF"]), async (req, res) => {
         dn.donor_phone_no,
         dn.donor_blood_group,
         d.component_type,
+        d.quantity,
         d.donation_date,
         d.donation_id
       FROM donation d

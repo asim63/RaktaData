@@ -31,6 +31,14 @@ VALUES (
     'System Admin'
 );
 
+INSERT INTO users (username, password, role)
+VALUES ('admin2', crypt('admin123', gen_salt('bf', 10)), 'ADMIN');
+
+INSERT INTO admin (user_id, admin_name)
+VALUES (
+    (SELECT user_id FROM users WHERE username = 'admin2'),
+    'System Admin2'
+);
 
 -- ============================================
 -- SECTION 2: STAFF ACCOUNTS (5 staff)
