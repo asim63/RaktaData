@@ -1,8 +1,20 @@
 const { Pool } = require("pg");
 require("dotenv").config();
 
+const connectionString = process.env.DATABASE_URL || process.env.DB_URL;
+if (!connectionString) {
+  console.error(
+    "Missing database connection string. Set DATABASE_URL (Railway default) or DB_URL.",
+  );
+  process.exit(1);
+}
+
 const pool = new Pool({
-  connectionString: process.env.DB_URL,
+  connectionString,
+  ssl:
+    process.env.DB_SSL === "true"
+      ? { rejectUnauthorized: false }
+      : undefined,
 });
 
 pool.connect((err, client, release) => {

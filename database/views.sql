@@ -187,7 +187,7 @@ SELECT
         ELSE 'Good'
     END AS expiry_status,
 
-    -- â†� add this!
+    -- add this!
     CASE
         WHEN bs.available_units = 0  THEN 'Out of Stock'
         WHEN bs.available_units < 5  THEN 'Critical'
