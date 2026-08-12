@@ -1,3 +1,5 @@
+
+
 # 🩸 RaktaData
 
 A full-stack blood bank management system for tracking donors, managing blood stock, and processing transfusion requests — built with PostgreSQL, Express, React, and Node.js (PERN stack).
@@ -200,7 +202,7 @@ Key automation:
 | Trigger 1  | After a donation, sets donor `eligibility_status = FALSE` and logs `last_donation_date` |
 | Trigger 3  | After a request is inserted, auto-sets status to `REJECTED` or `PENDING` based on stock |
 | Trigger 6  | Validates that donation blood group matches the registered donor's blood group          |
-| Cron job   | Runs daily — resets `eligibility_status = TRUE` for donors 90+ days since last donation |
+| Cron jobs  | Runs daily — resets donor eligibility after 90 days and removes expired blood stock batches |
 | Procedures | `approve_blood_request` and `reject_blood_request` run as atomic transactions           |
 
 ---
